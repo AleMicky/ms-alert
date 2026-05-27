@@ -7,7 +7,6 @@ export class EventType extends BaseAuditableEntity {
   clientSystem: ClientSystem;
   code: string;
   name: string;
-  category?: string;
   description?: string;
   severityLevel?: SeverityLevel;
   active: boolean;

@@ -6,3 +6,4 @@ export * from './event-typeorm.repository';
 export * from './alert-rule-typeorm.repository';
 export * from './alert-typeorm.repository';
 export * from './alert-notification-typeorm.repository';
+export * from './event-type-typeorm.repository';

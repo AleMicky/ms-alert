@@ -4,6 +4,7 @@ export * from './client-system-response.schema';
 export * from './client-system-token-response.schema';
 export * from './notification-channel-response.schema';
 export * from './event-response.schema';
+export * from './event-type-response.schema';
 export * from './alert-rule-response.schema';
 export * from './alert-response.schema';
 export * from './alert-notification-response.schema';
