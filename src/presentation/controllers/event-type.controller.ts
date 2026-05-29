@@ -28,12 +28,13 @@ export class EventTypeController extends BaseController<
     super(eventTypeService);
   }
 
-  @Get('code/:code')
+  @Get('code/:code/client-system/:clientSystemId')
   @ApiOperation({ summary: 'Obtener tipo de evento por código' })
   @ApiParam({ name: 'code', example: 'PAYMENT_REJECTED' })
+  @ApiParam({ name: 'clientSystemId', example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiOkResponse({ type: EventTypeResponseSchema })
-  findByCode(@Param('code') code: string) {
-    return this.eventTypeService.findByCode(code);
+  findByCode(@Param('code') code: string, @Param('clientSystemId') clientSystemId: string) {
+    return this.eventTypeService.findByCode(clientSystemId, code);
   }
 
   @Get('client-system/:clientSystemId/active')

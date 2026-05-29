@@ -1,56 +1,38 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDateString,
-  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
-  IsUUID,
+  IsNotEmpty,
 } from 'class-validator';
-import {
-  SWAGGER_DATE,
-  SWAGGER_UUID,
-  SWAGGER_UUID_2,
-} from 'src/config/swagger/constants/swagger-examples';
 
 export class CreateEventDto {
   @ApiProperty({
-    type: String,
-    format: 'uuid',
-    example: SWAGGER_UUID,
-    description: 'Sistema que originó el evento',
+    example: 'GESTION_VEHICULAR',
+    description: 'Código del sistema cliente',
   })
-  @IsUUID()
-  clientSystemId: string;
+  @IsString()
+  @IsNotEmpty()
+  clientSystemCode: string;
 
   @ApiProperty({
-    type: String,
-    format: 'uuid',
-    example: SWAGGER_UUID_2,
-    description: 'Nivel de severidad asignado',
+    example: 'VEHICLE_REQUEST_APPROVED',
+    description: 'Código del tipo de evento',
   })
-  @IsUUID()
-  severityLevelId: string;
-
-  @ApiProperty({ type: String, example: 'EVT_PAGO_RECHAZADO' })
   @IsString()
   @IsNotEmpty()
-  code: string;
+  eventTypeCode: string;
 
-  @ApiProperty({ type: String, example: 'PAYMENT_REJECTED' })
-  @IsString()
-  @IsNotEmpty()
-  eventType: string;
-
-  @ApiProperty({ type: String, example: 'Pago rechazado' })
+  @ApiProperty({
+    example: 'Solicitud aprobada',
+  })
   @IsString()
   @IsNotEmpty()
   title: string;
 
   @ApiProperty({
-    type: String,
-    example: 'El pago con referencia ABC123 fue rechazado',
+    example: 'La solicitud SOL-001 fue aprobada.',
   })
   @IsString()
   @IsNotEmpty()
@@ -59,29 +41,24 @@ export class CreateEventDto {
   @ApiPropertyOptional({
     type: 'object',
     additionalProperties: true,
-    example: { orderId: 'ORD-99', amount: 1500.5 },
-    description: 'Datos adicionales del evento en JSON',
+    example: {
+      requestId: 'SOL-001',
+      approvedBy: 'Juan Pérez',
+      channels: ['EMAIL', 'TELEGRAM'],
+      approver: {
+        email: 'faviana@email.com',
+        telegramChatId: '123456789',
+      },
+    },
   })
   @IsOptional()
   @IsObject()
   payloadJson?: Record<string, unknown>;
 
-  @ApiPropertyOptional({ type: String, example: 'PENDING', default: 'PENDING' })
-  @IsOptional()
-  @IsString()
-  status?: string;
-
-  @ApiProperty({
-    type: String,
-    format: 'date-time',
-    example: SWAGGER_DATE,
-    description: 'Fecha en que ocurrió el evento (ISO 8601)',
+  @ApiPropertyOptional({
+    example: true,
+    default: true,
   })
-  @IsDateString()
-  @IsOptional()
-  eventDate: string;
-
-  @ApiPropertyOptional({ type: Boolean, example: true, default: true })
   @IsOptional()
   @IsBoolean()
   active?: boolean;

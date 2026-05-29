@@ -4,6 +4,14 @@ import { NotificationChannelType } from 'src/domain/enums/notification-channel-t
 
 export class SendTestN8nDto {
   @ApiPropertyOptional({
+    example: 'test-1716860000000',
+    description: 'Identificador de la notificación para pruebas',
+  })
+  @IsOptional()
+  @IsString()
+  notificationId?: string;
+
+  @ApiPropertyOptional({
     enum: NotificationChannelType,
     example: NotificationChannelType.TELEGRAM,
     description: 'Canal de notificación a usar en la prueba',
@@ -11,6 +19,14 @@ export class SendTestN8nDto {
   @IsOptional()
   @IsString()
   channel?: string;
+
+  @ApiPropertyOptional({
+    example: '@mi_usuario',
+    description: 'Destino del canal (chat, correo, webhook, etc.)',
+  })
+  @IsOptional()
+  @IsString()
+  target?: string;
 
   @ApiPropertyOptional({
     example: 'Prueba MS Alert',

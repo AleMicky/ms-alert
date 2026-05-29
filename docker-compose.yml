@@ -3,25 +3,21 @@ services:
     image: postgres:16
     container_name: db-ms-alert
     restart: always
-
     ports:
-      - ${DB_PORT}:5432
-
+      - "${DB_PORT}:5432"
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   n8n:
     image: n8nio/n8n
     container_name: ms-notifications-n8n
     restart: always
-
     ports:
       - "5678:5678"
-
     environment:
       - N8N_HOST=localhost
       - N8N_PORT=5678
@@ -29,10 +25,19 @@ services:
       - WEBHOOK_URL=http://localhost:5678/
       - N8N_EDITOR_BASE_URL=http://localhost:5678/
       - GENERIC_TIMEZONE=America/La_Paz
-      
     volumes:
       - n8n_data:/home/node/.n8n
+
+  redis:
+    image: redis:7
+    container_name: ms-notifications-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
   n8n_data:
+  redis_data:

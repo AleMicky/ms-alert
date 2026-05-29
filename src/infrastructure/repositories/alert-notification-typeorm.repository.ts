@@ -15,10 +15,14 @@ type AlertNotificationPersistenceInput = Partial<AlertNotificationEntity> & {
 @Injectable()
 export class AlertNotificationTypeormRepository
   extends GenericRepository<AlertNotificationEntity>
-  implements AlertNotificationRepository
-{
+  implements AlertNotificationRepository {
   private static readonly relations = {
-    alert: true,
+    alert: {
+      event: {
+        clientSystem: true,
+      },
+      severityLevel: true,
+    },
     notificationChannel: true,
   };
 

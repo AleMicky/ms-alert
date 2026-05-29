@@ -5,7 +5,11 @@ export class AlertNotification {
   id: string;
   alert: Alert;
   notificationChannel: NotificationChannel;
+  target: string;
+  title: string;
+  message: string;
   status: string;
   sentAt?: Date;
-  response?: string;
+  responseJson?: Record<string, any>;
+  errorMessage?: string;
 }

@@ -42,9 +42,9 @@ export class EventTypeTypeormRepository
     });
   }
 
-  findByCode(code: string): Promise<EventType | null> {
+  findByCode(clientSystemId: string, code: string): Promise<EventType | null> {
     return this.repository.findOne({
-      where: { code },
+      where: { code, clientSystem: { id: clientSystemId } },
       relations: EventTypeTypeormRepository.relations,
     });
   }

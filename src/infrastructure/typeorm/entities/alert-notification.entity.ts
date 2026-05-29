@@ -15,33 +15,31 @@ export class AlertNotificationEntity {
   id: string;
 
   @ManyToOne(() => AlertEntity)
-  @JoinColumn({
-    name: 'alert_id',
-  })
+  @JoinColumn({ name: 'alert_id' })
   alert: AlertEntity;
 
   @ManyToOne(() => NotificationChannelEntity)
-  @JoinColumn({
-    name: 'notification_channel_id',
-  })
+  @JoinColumn({ name: 'notification_channel_id' })
   notificationChannel: NotificationChannelEntity;
 
-  @Column({
-    length: 50,
-    default: 'PENDING',
-  })
+  @Column({ length: 255 })
+  target: string;
+
+  @Column({ length: 200 })
+  title: string;
+
+  @Column({ type: 'text' })
+  message: string;
+
+  @Column({ length: 50, default: 'PENDING' })
   status: string;
 
-  @Column({
-    name: 'sent_at',
-    type: 'timestamp',
-    nullable: true,
-  })
+  @Column({ name: 'sent_at', type: 'timestamp', nullable: true })
   sentAt?: Date;
 
-  @Column({
-    nullable: true,
-    type: 'text',
-  })
-  response?: string;
+  @Column({ name: 'response_json', type: 'jsonb', nullable: true })
+  responseJson?: Record<string, any>;
+
+  @Column({ name: 'error_message', type: 'text', nullable: true })
+  errorMessage?: string;
 }

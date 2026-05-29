@@ -1,0 +1,5 @@
+allowBuilds:
+  '@nestjs/core': true
+  '@scarf/scarf': false
+  msgpackr-extract: true
+  unrs-resolver: true

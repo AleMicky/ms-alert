@@ -26,7 +26,9 @@ export class TestN8nController {
   })
   send(@Body() body: SendTestN8nDto) {
     return this.notificationService.sendToN8n({
+      notificationId: body.notificationId ?? `test-${Date.now()}`,
       channel: body.channel ?? 'TELEGRAM',
+      target: body.target ?? 'test-target',
       title: body.title ?? 'Prueba MS Alert',
       message: body.message ?? 'Mensaje enviado desde NestJS hacia n8n',
       severity: body.severity ?? 'HIGH',

@@ -64,6 +64,8 @@ import {
   AlertNotificationTypeormRepository,
 } from './infrastructure/repositories';
 import { N8nClient } from './infrastructure/integrations/n8n/n8n.client';
+import { BullModule } from '@nestjs/bullmq';
+import { AlertNotificationProcessor } from './app/processors/alert-notification.processor';
 
 @Module({
   imports: [
@@ -78,6 +80,9 @@ import { N8nClient } from './infrastructure/integrations/n8n/n8n.client';
       AlertEntity,
       AlertNotificationEntity,
     ]),
+    BullModule.registerQueue({
+      name: 'alert-notifications',
+    }),
   ],
   controllers: [
     NotificationChannelsController,
@@ -93,6 +98,7 @@ import { N8nClient } from './infrastructure/integrations/n8n/n8n.client';
   ],
   providers: [
     N8nClient,
+    AlertNotificationProcessor,
     NotificationService,
     NotificationChannelsService,
     SeverityLevelService,
@@ -141,4 +147,4 @@ import { N8nClient } from './infrastructure/integrations/n8n/n8n.client';
     },
   ],
 })
-export class MsAlertsModule {}
+export class MsAlertsModule { }

@@ -3,4 +3,5 @@ export enum NotificationChannelType {
   WHATSAPP = 'WHATSAPP',
   TELEGRAM = 'TELEGRAM',
   TEAMS = 'TEAMS',
+  GOOGLE_CALENDAR = 'GOOGLE_CALENDAR',
 }

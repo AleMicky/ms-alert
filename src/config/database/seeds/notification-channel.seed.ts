@@ -10,7 +10,6 @@ export async function notificationChannelSeed(dataSource: DataSource) {
 
   if (exists > 0) {
     console.log('Notification channels already seeded');
-
     return;
   }
 
@@ -27,6 +26,20 @@ export async function notificationChannelSeed(dataSource: DataSource) {
       name: 'Email Alerts',
       type: NotificationChannelType.EMAIL,
       webhookUrl: 'http://localhost:5678/webhook/email',
+      active: true,
+    },
+    {
+      code: 'WHATSAPP_ALERTS',
+      name: 'WhatsApp Alerts',
+      type: NotificationChannelType.WHATSAPP,
+      webhookUrl: 'http://localhost:5678/webhook/whatsapp',
+      active: true,
+    },
+    {
+      code: 'TEAMS_ALERTS',
+      name: 'Teams Alerts',
+      type: NotificationChannelType.TEAMS,
+      webhookUrl: 'http://localhost:5678/webhook/teams',
       active: true,
     },
   ]);

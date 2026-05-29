@@ -10,8 +10,8 @@ export class EventTypeService extends BaseService<EventType> {
     super(eventTypeRepository);
   }
 
-  findByCode(code: string) {
-    return this.eventTypeRepository.findByCode(code);
+  findByCode(clientSystemId: string, code: string) {
+    return this.eventTypeRepository.findByCode(clientSystemId, code);
   }
 
   findActiveByClientSystem(clientSystemId: string) {
