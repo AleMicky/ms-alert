@@ -4,6 +4,7 @@ import { DeepPartial, Repository } from 'typeorm';
 
 import { GenericRepository } from 'src/shared/core/generic.repository';
 import { EventRepository } from 'src/domain/repositories/event.repository';
+import { EventStatus } from 'src/domain/enums/event-status.enum';
 import { EventEntity } from '../typeorm/entities/event.entity';
 
 type EventPersistenceInput = Partial<EventEntity> & {
@@ -103,7 +104,7 @@ export class EventTypeormRepository
         eventDate: eventDate instanceof Date ? eventDate : new Date(eventDate),
       }),
       ...(applyDefaults && {
-        status: rest.status ?? 'PENDING',
+        status: rest.status ?? EventStatus.PENDING,
         active: rest.active ?? true,
       }),
     };

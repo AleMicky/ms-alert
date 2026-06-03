@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 
 import { GenericRepository } from 'src/shared/core/generic.repository';
+import { AlertStatus } from 'src/domain/enums/alert-status.enum';
 import { AlertRepository } from 'src/domain/repositories/alert.repository';
 import { AlertEntity } from '../typeorm/entities/alert.entity';
 
@@ -54,7 +55,7 @@ export class AlertTypeormRepository
 
   findByStatus(status: string): Promise<AlertEntity[]> {
     return this.repository.find({
-      where: { status },
+      where: { status: status as AlertStatus },
       relations: AlertTypeormRepository.relations,
     });
   }
@@ -114,7 +115,7 @@ export class AlertTypeormRepository
           attendedAt instanceof Date ? attendedAt : new Date(attendedAt),
       }),
       ...(applyDefaults && {
-        status: rest.status ?? 'PENDING',
+        status: rest.status ?? AlertStatus.OPEN,
         active: rest.active ?? true,
       }),
     };

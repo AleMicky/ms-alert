@@ -8,6 +8,8 @@ import {
 
 import { BaseAuditColumns } from 'src/shared/core/base-audit-columns';
 
+import { AlertStatus } from 'src/domain/enums/alert-status.enum';
+
 import { AlertRuleEntity } from './alert-rule.entity';
 import { SeverityLevelEntity } from './severity-level.entity';
 import { EventEntity } from './event.entity';
@@ -47,9 +49,9 @@ export class AlertEntity extends BaseAuditColumns {
 
   @Column({
     length: 50,
-    default: 'PENDING',
+    default: AlertStatus.OPEN,
   })
-  status: string;
+  status: AlertStatus;
 
   @Column({
     name: 'alert_date',

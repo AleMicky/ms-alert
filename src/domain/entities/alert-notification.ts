@@ -1,3 +1,4 @@
+import { AlertNotificationStatus } from '../enums/alert-notification-status.enum';
 import { Alert } from './alert';
 import { NotificationChannel } from './notification-channel';
 
@@ -8,8 +9,9 @@ export class AlertNotification {
   target: string;
   title: string;
   message: string;
-  status: string;
+  status: AlertNotificationStatus;
   sentAt?: Date;
   responseJson?: Record<string, any>;
   errorMessage?: string;
+  payloadJson?: Record<string, any>;
 }

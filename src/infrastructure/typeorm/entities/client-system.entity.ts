@@ -25,5 +25,5 @@ export class ClientSystemEntity extends BaseAuditColumns {
     () => ClientSystemTokenEntity,
     (clientSystemToken) => clientSystemToken.clientSystem,
   )
-  tokens: ClientSystemTokenEntity[];
+  tokens?: ClientSystemTokenEntity[];
 }

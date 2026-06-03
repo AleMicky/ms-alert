@@ -28,13 +28,15 @@ export class TestN8nController {
     return this.notificationService.sendToN8n({
       notificationId: body.notificationId ?? `test-${Date.now()}`,
       channel: body.channel ?? 'TELEGRAM',
-      target: body.target ?? 'test-target',
-      title: body.title ?? 'Prueba MS Alert',
-      message: body.message ?? 'Mensaje enviado desde NestJS hacia n8n',
-      severity: body.severity ?? 'HIGH',
-      system: body.system ?? 'MS_ALERTAS',
-      eventType: body.eventType ?? 'TEST_EVENT',
-      payload: body.payload ?? {},
+      payload: {
+        target: body.target ?? 'test-target',
+        title: body.title ?? 'Prueba MS Alert',
+        message: body.message ?? 'Mensaje enviado desde NestJS hacia n8n',
+        severity: body.severity ?? 'HIGH',
+        system: body.system ?? 'MS_ALERTAS',
+        eventType: body.eventType ?? 'TEST_EVENT',
+        ...(body.payload ?? {}),
+      },
     });
   }
 }

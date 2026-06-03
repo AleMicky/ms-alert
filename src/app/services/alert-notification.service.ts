@@ -3,12 +3,12 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
 import { BaseService } from 'src/shared/core/base.service';
-
 import { Alert } from 'src/domain/entities/alert';
 import { AlertNotification } from 'src/domain/entities/alert-notification';
 
 import { AlertNotificationRepository } from 'src/domain/repositories/alert-notification.repository';
 import { NotificationChannelRepository } from 'src/domain/repositories/notification-channel.repository';
+import { AlertNotificationStatus } from 'src/domain/enums/alert-notification-status.enum';
 
 @Injectable()
 export class AlertNotificationService extends BaseService<AlertNotification> {
@@ -23,53 +23,65 @@ export class AlertNotificationService extends BaseService<AlertNotification> {
   }
 
   async createFromAlert(alert: Alert): Promise<AlertNotification[]> {
-    const payload = alert.event.payloadJson as any;
-
-    const channels: string[] = payload?.channels ?? [];
-
+    const eventPayload = alert.event.payloadJson as any;
+    const recipients = eventPayload?.recipients ?? [];
+  
     const notifications: AlertNotification[] = [];
-
-    for (const channelCode of channels) {
+  
+    for (const recipient of recipients) {
+      if (!recipient?.channel) continue;
+  
       const notificationChannel =
-        await this.notificationChannelRepository.findByCode(channelCode);
-
+        await this.notificationChannelRepository.findByCode(
+          recipient.channel,
+        );
+  
       if (!notificationChannel || !notificationChannel.active) {
         continue;
       }
-
-      const target = this.resolveTarget(channelCode, payload);
-
-      if (!target) {
-        continue;
-      }
-
+  
       const notification = await this.alertNotificationRepository.create({
         alert,
         notificationChannel,
-        target,
-        title: alert.title,
-        message: alert.message,
-        status: 'PENDING',
+        target: this.resolveTarget(recipient),
+        title: recipient.subject ?? alert.title,
+        message: recipient.message ?? alert.message,
+        payloadJson: this.cleanRecipientPayload(recipient),
+        status: AlertNotificationStatus.PENDING,
       });
-
+  
       notifications.push(notification);
-
+  
       await this.alertNotificationQueue.add(
         'send-alert-notification',
         {
           alertNotificationId: notification.id,
         },
-        {
-          attempts: 3,
-          backoff: {
-            type: 'exponential',
-            delay: 5000,
-          },
-        },
       );
     }
-
+  
     return notifications;
+  }
+  
+  private resolveTarget(recipient: any): string {
+    if (recipient.channel === 'EMAIL') {
+      return recipient.to?.[0];
+    }
+  
+    if (recipient.channel === 'TELEGRAM') {
+      return recipient.chatId;
+    }
+  
+    if (recipient.channel === 'GOOGLE_CALENDAR') {
+      return recipient.attendee;
+    }
+  
+    return recipient.target;
+  }
+  
+  private cleanRecipientPayload(recipient: any): Record<string, any> {
+    const { channel, ...payload } = recipient;
+    return payload;
   }
 
   findByAlertId(alertId: string) {
@@ -79,32 +91,4 @@ export class AlertNotificationService extends BaseService<AlertNotification> {
   findByStatus(status: string) {
     return this.alertNotificationRepository.findByStatus(status);
   }
-
-  private resolveTarget(
-    channelCode: string,
-    payload: any,
-  ): string | null {
-    if (channelCode === 'EMAIL') {
-      return payload?.approver?.email ?? null;
-    }
-
-    if (channelCode === 'TELEGRAM') {
-      return payload?.approver?.telegramChatId ?? null;
-    }
-
-    if (channelCode === 'WHATSAPP') {
-      return payload?.approver?.phone ?? null;
-    }
-
-    if (channelCode === 'TEAMS') {
-      return payload?.approver?.teamsWebhook ?? null;
-    }
-
-    if (channelCode === 'GOOGLE_CALENDAR') {
-      return payload?.calendar?.target ?? null;
-    }
-
-    return null;
-  }
 }
-

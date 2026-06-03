@@ -3,9 +3,14 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 
 import { AlertNotificationService } from 'src/app/services/alert-notification.service';
-import { N8nClient } from 'src/infrastructure/integrations/n8n/n8n.client';
 import { AlertService } from '../services/alert.service';
 import { EventService } from '../services/event.service';
+
+import { N8nClient } from 'src/infrastructure/integrations/n8n/n8n.client';
+
+import { AlertNotificationStatus } from 'src/domain/enums/alert-notification-status.enum';
+import { AlertStatus } from 'src/domain/enums/alert-status.enum';
+import { EventStatus } from 'src/domain/enums/event-status.enum';
 
 @Processor('alert-notifications')
 @Injectable()
@@ -22,7 +27,9 @@ export class AlertNotificationProcessor extends WorkerHost {
   }
 
   async process(
-    job: Job<{ alertNotificationId: string }>,
+    job: Job<{
+      alertNotificationId: string;
+    }>,
   ): Promise<void> {
     const { alertNotificationId } = job.data;
 
@@ -36,46 +43,52 @@ export class AlertNotificationProcessor extends WorkerHost {
 
     try {
       await this.alertNotificationService.update(notification.id, {
-        status: 'PROCESSING',
+        status: AlertNotificationStatus.PROCESSING,
       });
 
-      const response = await this.n8nClient.sendNotification({
+      const webhookUrl = notification.notificationChannel.webhookUrl;
+
+      if (!webhookUrl) {
+        throw new Error(
+          `Webhook URL no configurada para el canal ${notification.notificationChannel.code}`,
+        );
+      }
+
+      const response = await this.n8nClient.sendNotification(webhookUrl, {
         notificationId: notification.id,
         channel: notification.notificationChannel.code,
-        target: notification.target,
-        title: notification.title,
-        message: notification.message,
-        severity: notification.alert.severityLevel.code,
-        system: notification.alert.event.clientSystem.code,
-        eventType: notification.alert.event.eventType,
-        payload: notification.alert.event.payloadJson,
+        payload: notification.payloadJson ?? {},
       });
 
       await this.alertNotificationService.update(notification.id, {
-        status: 'SENT',
+        status: AlertNotificationStatus.SENT,
         sentAt: new Date(),
         responseJson: response,
       });
-      await this.alertService.update(
-        notification.alert.id,
-        {
-          status: 'NOTIFIED',
-        },
-      );
 
-      await this.eventService.update(
-        notification.alert.event.id,
-        {
-          status: 'PROCESSED',
-          processedAt: new Date(),
-        },
-      );
-
-    } catch (error) {
-      await this.alertNotificationService.update(notification.id, {
-        status: 'FAILED',
-        errorMessage: error instanceof Error ? error.message : String(error),
+      await this.alertService.update(notification.alert.id, {
+        status: AlertStatus.NOTIFIED,
       });
+
+      await this.eventService.update(notification.alert.event.id, {
+        status: EventStatus.PROCESSED,
+        processedAt: new Date(),
+      });
+
+      this.logger.log(`Notificación enviada: ${notification.id}`);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      await this.alertNotificationService.update(notification.id, {
+        status: AlertNotificationStatus.FAILED,
+        errorMessage,
+      });
+
+      this.logger.error(
+        `Error enviando notificación: ${notification.id}`,
+        errorMessage,
+      );
 
       throw error;
     }

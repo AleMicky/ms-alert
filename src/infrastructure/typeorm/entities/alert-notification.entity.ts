@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { AlertNotificationStatus } from 'src/domain/enums/alert-notification-status.enum';
+
 import { AlertEntity } from './alert.entity';
 import { NotificationChannelEntity } from './notification-channel.entity';
 
@@ -31,8 +33,8 @@ export class AlertNotificationEntity {
   @Column({ type: 'text' })
   message: string;
 
-  @Column({ length: 50, default: 'PENDING' })
-  status: string;
+  @Column({ length: 50, default: AlertNotificationStatus.PENDING })
+  status: AlertNotificationStatus;
 
   @Column({ name: 'sent_at', type: 'timestamp', nullable: true })
   sentAt?: Date;
@@ -42,4 +44,11 @@ export class AlertNotificationEntity {
 
   @Column({ name: 'error_message', type: 'text', nullable: true })
   errorMessage?: string;
+
+  @Column({
+    name: 'payload_json',
+    type: 'jsonb',
+    nullable: true,
+  })
+  payloadJson?: Record<string, any>;
 }
