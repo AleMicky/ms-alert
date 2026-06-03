@@ -1,4 +1,16 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  MethodNotAllowedException,
+  Param,
+  ParseEnumPipe,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiOperation,
@@ -8,6 +20,7 @@ import {
 import { BaseController } from 'src/shared/core/base.controller';
 import { ApiCrudDoc } from 'src/config/swagger/crud';
 import { AlertNotification } from 'src/domain/entities/alert-notification';
+import { AlertNotificationStatus } from 'src/domain/enums/alert-notification-status.enum';
 import { AlertNotificationService } from 'src/app/services/alert-notification.service';
 import { AlertNotificationResponseSchema } from '../schemas';
 import {
@@ -46,9 +59,48 @@ export class AlertNotificationController extends BaseController<
 
   @Get('status/:status')
   @ApiOperation({ summary: 'Listar notificaciones por estado' })
-  @ApiParam({ name: 'status', example: 'SENT' })
+  @ApiParam({
+    name: 'status',
+    enum: AlertNotificationStatus,
+    example: AlertNotificationStatus.SENT,
+  })
   @ApiOkResponse({ type: [AlertNotificationResponseSchema] })
-  findByStatus(@Param('status') status: string) {
+  findByStatus(
+    @Param('status', new ParseEnumPipe(AlertNotificationStatus))
+    status: AlertNotificationStatus,
+  ) {
     return this.alertNotificationService.findByStatus(status);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.METHOD_NOT_ALLOWED)
+  create(): never {
+    throw new MethodNotAllowedException(
+      'Las notificaciones se crean automáticamente al registrar un evento',
+    );
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.METHOD_NOT_ALLOWED)
+  update(): never {
+    throw new MethodNotAllowedException(
+      'Las notificaciones se actualizan mediante el procesador de cola',
+    );
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.METHOD_NOT_ALLOWED)
+  replace(): never {
+    throw new MethodNotAllowedException(
+      'Las notificaciones se actualizan mediante el procesador de cola',
+    );
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.METHOD_NOT_ALLOWED)
+  delete(): never {
+    throw new MethodNotAllowedException(
+      'No se permite eliminar notificaciones por API',
+    );
   }
 }

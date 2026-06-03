@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 
 import { BaseService } from 'src/shared/core/base.service';
 import { Event } from 'src/domain/entities/event';
@@ -6,9 +7,9 @@ import { EventRepository } from 'src/domain/repositories/event.repository';
 import { ClientSystemRepository } from 'src/domain/repositories/client-system.repository';
 import { EventTypeRepository } from 'src/domain/repositories/event-type.repository';
 import { CreateEventDto } from 'src/presentation/dto/event/create-event.dto';
+import { EventStatus } from 'src/domain/enums/event-status.enum';
 
 import { AlertService } from './alert.service';
-import { EventStatus } from 'src/domain/enums/event-status.enum';
 
 @Injectable()
 export class EventService extends BaseService<Event> {
@@ -21,7 +22,7 @@ export class EventService extends BaseService<Event> {
     super(eventRepository);
   }
 
-  async create(dto: CreateEventDto): Promise<Event> {
+  async createFromDto(dto: CreateEventDto): Promise<Event> {
     const clientSystem =
       await this.clientSystemRepository.findByCode(dto.clientSystemCode);
 
@@ -52,7 +53,7 @@ export class EventService extends BaseService<Event> {
       eventType: dto.eventTypeCode,
       title: dto.title,
       message: dto.message,
-      payloadJson: dto.payloadJson,
+      payloadJson: dto.payloadJson as Record<string, unknown> | undefined,
       status: EventStatus.PENDING,
       eventDate: new Date(),
       active: dto.active ?? true,
@@ -72,6 +73,6 @@ export class EventService extends BaseService<Event> {
   }
 
   private generateEventCode(): string {
-    return `EVT-${Date.now()}`;
+    return `EVT-${randomUUID()}`;
   }
 }

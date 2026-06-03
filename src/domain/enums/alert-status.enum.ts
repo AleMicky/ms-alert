@@ -1,6 +1,6 @@
 export enum AlertStatus {
-    OPEN = 'OPEN',
-    NOTIFIED = 'NOTIFIED',
-    RESOLVED = 'RESOLVED',
-    FAILED = 'FAILED',
+  OPEN = 'OPEN',
+  NOTIFIED = 'NOTIFIED',
+  RESOLVED = 'RESOLVED',
+  FAILED = 'FAILED',
 }

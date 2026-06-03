@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
 import {
   ApiOkResponse,
   ApiOperation,
@@ -26,6 +27,12 @@ export class EventController extends BaseController<
 > {
   constructor(private readonly eventService: EventService) {
     super(eventService);
+  }
+
+  @Post()
+  @ApiBody({ type: CreateEventDto })
+  create(@Body() dto: CreateEventDto) {
+    return this.eventService.createFromDto(dto);
   }
 
   @Get('code/:code')

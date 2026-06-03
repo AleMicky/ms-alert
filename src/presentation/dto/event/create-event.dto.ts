@@ -1,11 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsObject,
+  IsNotEmpty,
   IsOptional,
   IsString,
-  IsNotEmpty,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+import { EventPayloadDto } from './event-recipient.dto';
 
 export class CreateEventDto {
   @ApiProperty({
@@ -39,21 +42,29 @@ export class CreateEventDto {
   message: string;
 
   @ApiPropertyOptional({
-    type: 'object',
-    additionalProperties: true,
+    type: EventPayloadDto,
     example: {
       requestId: 'SOL-001',
       approvedBy: 'Juan Pérez',
-      channels: ['EMAIL', 'TELEGRAM'],
-      approver: {
-        email: 'faviana@email.com',
-        telegramChatId: '123456789',
-      },
+      recipients: [
+        {
+          channel: 'EMAIL',
+          to: ['usuario@email.com'],
+          subject: 'Solicitud aprobada',
+          message: 'La solicitud SOL-001 fue aprobada.',
+        },
+        {
+          channel: 'TELEGRAM',
+          chatId: '123456789',
+          message: 'Solicitud SOL-001 aprobada',
+        },
+      ],
     },
   })
   @IsOptional()
-  @IsObject()
-  payloadJson?: Record<string, unknown>;
+  @ValidateNested()
+  @Type(() => EventPayloadDto)
+  payloadJson?: EventPayloadDto;
 
   @ApiPropertyOptional({
     example: true,
