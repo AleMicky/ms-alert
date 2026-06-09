@@ -67,6 +67,8 @@ import {
 import { N8nClient } from './infrastructure/integrations/n8n/n8n.client';
 import { BullModule } from '@nestjs/bullmq';
 import { AlertNotificationProcessor } from './app/processors/alert-notification.processor';
+import { TokenGeneratorService } from './infrastructure/security/token-generator.service';
+import { ClientSystemAuthGuard } from './shared/guards/client-system-auth.guard';
 
 @Module({
   imports: [
@@ -106,6 +108,8 @@ import { AlertNotificationProcessor } from './app/processors/alert-notification.
   providers: [
     N8nClient,
     AlertNotificationProcessor,
+    TokenGeneratorService,
+    ClientSystemAuthGuard,
     NotificationService,
     NotificationChannelsService,
     SeverityLevelService,
@@ -155,4 +159,4 @@ import { AlertNotificationProcessor } from './app/processors/alert-notification.
     },
   ],
 })
-export class MsAlertsModule { }
+export class MsAlertsModule {}

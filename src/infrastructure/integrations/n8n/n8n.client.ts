@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 export interface N8nNotificationPayload {
   notificationId: string;
@@ -20,11 +20,23 @@ export class N8nClient {
       throw new Error('Webhook URL no configurada');
     }
 
-    const response = await axios.post(webhookUrl, body, {
-      timeout: 30000,
-      validateStatus: (status) => status >= 200 && status < 300,
-    });
+    try {
+      const response = await axios.post(webhookUrl, body, {
+        timeout: 30000,
+        validateStatus: (status) => status >= 200 && status < 300,
+      });
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+        const detail =
+          typeof data === 'string' ? data : JSON.stringify(data ?? {});
+
+        throw new Error(`n8n respondió ${status}: ${detail}`);
+      }
+
+      throw error;
+    }
   }
 }

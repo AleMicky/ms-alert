@@ -1,10 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SendTestN8nDto } from '../dto/test-n8n/send-test-n8n.dto';
 
@@ -27,8 +22,7 @@ export class TestN8nController {
   send(@Body() body: SendTestN8nDto) {
     const target = body.target ?? 'test-target';
     const title = body.title ?? 'Prueba MS Alert';
-    const message =
-      body.message ?? 'Mensaje enviado desde NestJS hacia n8n';
+    const message = body.message ?? 'Mensaje enviado desde NestJS hacia n8n';
 
     return this.notificationService.sendToN8n({
       notificationId: body.notificationId ?? `test-${Date.now()}`,

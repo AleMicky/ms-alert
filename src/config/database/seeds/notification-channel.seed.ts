@@ -25,7 +25,7 @@ export async function notificationChannelSeed(dataSource: DataSource) {
       code: 'EMAIL_ALERTS',
       name: 'Email Alerts',
       type: NotificationChannelType.EMAIL,
-      webhookUrl: 'http://localhost:5678/webhook/email',
+      webhookUrl: 'http://localhost:5678/webhook/send-email',
       active: true,
     },
     {

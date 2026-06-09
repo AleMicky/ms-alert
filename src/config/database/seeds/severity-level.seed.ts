@@ -2,14 +2,11 @@ import { DataSource } from 'typeorm';
 import { SeverityLevelEntity } from 'src/infrastructure/typeorm/entities/severity-level.entity';
 
 export async function severityLevelSeed(dataSource: DataSource) {
-
   const repository = dataSource.getRepository(SeverityLevelEntity);
   const exists = await repository.count();
 
   if (exists > 0) {
-    console.log(
-      'Los niveles de severidad ya fueron registrados',
-    );
+    console.log('Los niveles de severidad ya fueron registrados');
     return;
   }
 
@@ -44,7 +41,5 @@ export async function severityLevelSeed(dataSource: DataSource) {
     },
   ]);
 
-  console.log(
-    'Niveles de severidad registrados correctamente',
-  );
+  console.log('Niveles de severidad registrados correctamente');
 }

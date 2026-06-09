@@ -53,7 +53,9 @@ export class AlertNotificationService extends BaseService<AlertNotification> {
       }
 
       const notificationChannel =
-        await this.notificationChannelRepository.findByCode(recipient.channel);
+        await this.notificationChannelRepository.findByRecipientChannel(
+          recipient.channel,
+        );
 
       if (!notificationChannel) {
         this.logger.warn(

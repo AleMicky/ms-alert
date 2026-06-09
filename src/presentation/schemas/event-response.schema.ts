@@ -10,7 +10,11 @@ export class EventResponseSchema extends BaseAuditSchema {
   @ApiProperty({ format: 'uuid', example: SWAGGER_UUID })
   id: string;
 
-  @ApiProperty({ format: 'uuid', example: SWAGGER_UUID_2, description: 'ID del sistema cliente' })
+  @ApiProperty({
+    format: 'uuid',
+    example: SWAGGER_UUID_2,
+    description: 'ID del sistema cliente',
+  })
   clientSystemId: string;
 
   @ApiProperty({ example: 'EVT_PAGO_RECHAZADO' })
@@ -22,7 +26,9 @@ export class EventResponseSchema extends BaseAuditSchema {
   @ApiProperty({ example: 'Pago rechazado' })
   title: string;
 
-  @ApiProperty({ example: 'El pago con referencia ABC123 fue rechazado por el banco' })
+  @ApiProperty({
+    example: 'El pago con referencia ABC123 fue rechazado por el banco',
+  })
   message: string;
 
   @ApiPropertyOptional({
@@ -41,7 +47,11 @@ export class EventResponseSchema extends BaseAuditSchema {
   @ApiProperty({ type: String, format: 'date-time', example: SWAGGER_DATE })
   eventDate: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date-time', example: SWAGGER_DATE })
+  @ApiPropertyOptional({
+    type: String,
+    format: 'date-time',
+    example: SWAGGER_DATE,
+  })
   processedAt?: string;
 
   @ApiProperty({ type: Boolean, example: true })

@@ -22,7 +22,6 @@ export class AlertService extends BaseService<Alert> {
   async createFromEvent(event: Event): Promise<Alert> {
     const alert = await this.alertRepository.create({
       event,
-      severityLevel: event.severityLevel,
       title: event.title,
       message: event.message,
       status: AlertStatus.OPEN,

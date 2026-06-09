@@ -21,7 +21,7 @@ export class EventTypeResponseSchema extends BaseAuditSchema {
 
   @ApiProperty({ example: 'Pago rechazado' })
   name: string;
-  
+
   @ApiPropertyOptional({
     example: 'Evento generado cuando un pago es rechazado por el banco',
   })

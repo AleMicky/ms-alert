@@ -8,13 +8,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: process.env.ALLOWED_ORIGINS?.split(','),
-    methods: [
-      'GET',
-      'POST',
-      'PATCH',
-      'DELETE',
-      'PUT',
-    ],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
     credentials: true,
   });
 
@@ -30,7 +24,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix(apiPrefix);
 
-  swaggerSetup(app, apiPrefix);
+  swaggerSetup(app);
 
   await app.listen(port, () => {
     console.log(

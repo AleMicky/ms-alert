@@ -11,7 +11,6 @@ import { BaseAuditColumns } from 'src/shared/core/base-audit-columns';
 import { EventStatus } from 'src/domain/enums/event-status.enum';
 
 import { ClientSystemEntity } from './client-system.entity';
-import { SeverityLevelEntity } from './severity-level.entity';
 
 @Entity('tevents')
 export class EventEntity extends BaseAuditColumns {
@@ -36,10 +35,6 @@ export class EventEntity extends BaseAuditColumns {
 
   @Column({ name: 'payload_json', type: 'jsonb', nullable: true })
   payloadJson?: Record<string, any>;
-
-  @ManyToOne(() => SeverityLevelEntity)
-  @JoinColumn({ name: 'severity_level_id' })
-  severityLevel: SeverityLevelEntity;
 
   @Column({ length: 50, default: EventStatus.PENDING })
   status: EventStatus;

@@ -30,7 +30,7 @@ export class CreateEventTypeDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-  
+
   @ApiPropertyOptional({
     type: String,
     example: 'Evento generado cuando un pago es rechazado por el banco',

@@ -1,5 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SWAGGER_DATE, SWAGGER_UUID, SWAGGER_UUID_2 } from 'src/config/swagger/constants/swagger-examples';
+import {
+  SWAGGER_DATE,
+  SWAGGER_UUID,
+  SWAGGER_UUID_2,
+} from 'src/config/swagger/constants/swagger-examples';
 
 export class AlertNotificationResponseSchema {
   @ApiProperty({ format: 'uuid', example: SWAGGER_UUID })
@@ -14,7 +18,11 @@ export class AlertNotificationResponseSchema {
   @ApiProperty({ example: 'SENT' })
   status: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date-time', example: SWAGGER_DATE })
+  @ApiPropertyOptional({
+    type: String,
+    format: 'date-time',
+    example: SWAGGER_DATE,
+  })
   sentAt?: string;
 
   @ApiPropertyOptional({ example: '{"ok":true,"messageId":"tg-123"}' })

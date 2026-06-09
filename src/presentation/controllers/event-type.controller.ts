@@ -1,9 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 
 import { BaseController } from 'src/shared/core/base.controller';
 import { ApiCrudDoc } from 'src/config/swagger/crud';
@@ -31,14 +27,22 @@ export class EventTypeController extends BaseController<
   @Get('code/:code/client-system/:clientSystemId')
   @ApiOperation({ summary: 'Obtener tipo de evento por código' })
   @ApiParam({ name: 'code', example: 'PAYMENT_REJECTED' })
-  @ApiParam({ name: 'clientSystemId', example: '123e4567-e89b-12d3-a456-426614174000' })
+  @ApiParam({
+    name: 'clientSystemId',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
   @ApiOkResponse({ type: EventTypeResponseSchema })
-  findByCode(@Param('code') code: string, @Param('clientSystemId') clientSystemId: string) {
+  findByCode(
+    @Param('code') code: string,
+    @Param('clientSystemId') clientSystemId: string,
+  ) {
     return this.eventTypeService.findByCode(clientSystemId, code);
   }
 
   @Get('client-system/:clientSystemId/active')
-  @ApiOperation({ summary: 'Listar tipos de evento activos por sistema cliente' })
+  @ApiOperation({
+    summary: 'Listar tipos de evento activos por sistema cliente',
+  })
   @ApiParam({
     name: 'clientSystemId',
     example: '123e4567-e89b-12d3-a456-426614174000',

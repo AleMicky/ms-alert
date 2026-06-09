@@ -13,12 +13,12 @@ export class ClientSystemTokenEntity extends BaseAuditColumns {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => ClientSystemEntity, (clientSystem) => clientSystem.tokens)
+  @ManyToOne(() => ClientSystemEntity)
   @JoinColumn({ name: 'client_system_id' })
   clientSystem: ClientSystemEntity;
 
-  @Column({ unique: true })
-  token: string;
+  @Column({ unique: true, name: 'token_hash' })
+  tokenHash: string;
 
   @Column({
     nullable: true,

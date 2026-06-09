@@ -2,12 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
 import { BaseService } from 'src/shared/core/base.service';
+import { ClientSystem } from 'src/domain/entities/client-system';
 import { Event } from 'src/domain/entities/event';
 import { EventRepository } from 'src/domain/repositories/event.repository';
-import { ClientSystemRepository } from 'src/domain/repositories/client-system.repository';
 import { EventTypeRepository } from 'src/domain/repositories/event-type.repository';
 import { CreateEventDto } from 'src/presentation/dto/event/create-event.dto';
 import { EventStatus } from 'src/domain/enums/event-status.enum';
+import { normalizeEventPayload } from 'src/app/utils/normalize-event-payload.util';
 
 import { AlertService } from './alert.service';
 
@@ -15,26 +16,31 @@ import { AlertService } from './alert.service';
 export class EventService extends BaseService<Event> {
   constructor(
     private readonly eventRepository: EventRepository,
-    private readonly clientSystemRepository: ClientSystemRepository,
     private readonly eventTypeRepository: EventTypeRepository,
     private readonly alertService: AlertService,
   ) {
     super(eventRepository);
   }
 
-  async createFromDto(dto: CreateEventDto): Promise<Event> {
-    const clientSystem =
-      await this.clientSystemRepository.findByCode(dto.clientSystemCode);
-
-    if (!clientSystem) {
-      throw new BadRequestException('Sistema cliente no encontrado');
+  async createFromDto(
+    dto: CreateEventDto,
+    authenticatedClientSystem: ClientSystem,
+  ): Promise<Event> {
+    if (
+      dto.clientSystemCode &&
+      dto.clientSystemCode !== authenticatedClientSystem.code
+    ) {
+      throw new BadRequestException(
+        'El código de sistema cliente no coincide con el token',
+      );
     }
 
-    const eventType =
-      await this.eventTypeRepository.findByCode(
-        clientSystem.id,
-        dto.eventTypeCode,
-      );
+    const clientSystem = authenticatedClientSystem;
+
+    const eventType = await this.eventTypeRepository.findByCode(
+      clientSystem.id,
+      dto.eventTypeCode,
+    );
 
     if (!eventType) {
       throw new BadRequestException('Tipo de evento no encontrado');
@@ -46,14 +52,20 @@ export class EventService extends BaseService<Event> {
       );
     }
 
+    const { title, message, payloadJson } = normalizeEventPayload(
+      dto.payloadJson,
+      eventType,
+      dto.title,
+      dto.message,
+    );
+
     const event = await this.eventRepository.create({
       clientSystem,
-      severityLevel: eventType.severityLevel,
       code: this.generateEventCode(),
       eventType: dto.eventTypeCode,
-      title: dto.title,
-      message: dto.message,
-      payloadJson: dto.payloadJson as Record<string, unknown> | undefined,
+      title,
+      message,
+      payloadJson,
       status: EventStatus.PENDING,
       eventDate: new Date(),
       active: dto.active ?? true,

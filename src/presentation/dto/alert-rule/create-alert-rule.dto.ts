@@ -6,7 +6,10 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { SWAGGER_UUID, SWAGGER_UUID_2 } from 'src/config/swagger/constants/swagger-examples';
+import {
+  SWAGGER_UUID,
+  SWAGGER_UUID_2,
+} from 'src/config/swagger/constants/swagger-examples';
 
 export class CreateAlertRuleDto {
   @ApiProperty({ type: String, example: 'RULE_PAGO_RECHAZADO' })

@@ -1,5 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SWAGGER_UUID, SWAGGER_UUID_2 } from 'src/config/swagger/constants/swagger-examples';
+import {
+  SWAGGER_UUID,
+  SWAGGER_UUID_2,
+} from 'src/config/swagger/constants/swagger-examples';
 import { BaseAuditSchema } from './base-audit.schema';
 
 export class AlertRuleResponseSchema extends BaseAuditSchema {

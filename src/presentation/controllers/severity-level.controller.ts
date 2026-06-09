@@ -1,9 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { BaseController } from 'src/shared/core/base.controller';
 import { ApiCrudDoc } from 'src/config/swagger/crud';
 import { SeverityLevel } from 'src/domain/entities/severity-level';

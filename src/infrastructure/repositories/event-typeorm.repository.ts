@@ -20,7 +20,6 @@ export class EventTypeormRepository
 {
   private static readonly relations = {
     clientSystem: true,
-    severityLevel: true,
   };
 
   constructor(
@@ -96,9 +95,6 @@ export class EventTypeormRepository
       ...rest,
       ...(clientSystemId && {
         clientSystem: { id: clientSystemId },
-      }),
-      ...(severityLevelId && {
-        severityLevel: { id: severityLevelId },
       }),
       ...(eventDate !== undefined && {
         eventDate: eventDate instanceof Date ? eventDate : new Date(eventDate),

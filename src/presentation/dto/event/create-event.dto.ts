@@ -2,22 +2,22 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 import { EventPayloadDto } from './event-recipient.dto';
 
 export class CreateEventDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'GESTION_VEHICULAR',
-    description: 'Código del sistema cliente',
+    description:
+      'Opcional. Si se envía, debe coincidir con el sistema del token Bearer.',
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  clientSystemCode: string;
+  clientSystemCode?: string;
 
   @ApiProperty({
     example: 'VEHICLE_REQUEST_APPROVED',
@@ -27,44 +27,51 @@ export class CreateEventDto {
   @IsNotEmpty()
   eventTypeCode: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'Solicitud aprobada',
+    description:
+      'Opcional. Si no se envía, se usa el subject del primer recipient o el nombre del tipo de evento.',
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  title: string;
+  title?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'La solicitud SOL-001 fue aprobada.',
+    description:
+      'Opcional. Si no se envía, se usa el message del primer recipient o la descripción del tipo de evento.',
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  message: string;
+  message?: string;
 
   @ApiPropertyOptional({
     type: EventPayloadDto,
+    description:
+      'Metadatos del evento y destinatarios dinámicos por canal (EMAIL, TELEGRAM, TEAMS, etc.).',
     example: {
-      requestId: 'SOL-001',
-      approvedBy: 'Juan Pérez',
       recipients: [
         {
           channel: 'EMAIL',
-          to: ['usuario@email.com'],
-          subject: 'Solicitud aprobada',
-          message: 'La solicitud SOL-001 fue aprobada.',
+          to: ['miguel.mamani.pxp@gmail.com'],
+          cc: [],
+          bcc: [],
+          subject: 'Solicitud de Vacaciones',
+          message: 'Debe aprobar la solicitud VAC-001',
+          html: '<b>Debe aprobar la solicitud VAC-001</b>',
+          attachments: [],
         },
         {
           channel: 'TELEGRAM',
           chatId: '123456789',
-          message: 'Solicitud SOL-001 aprobada',
+          message: 'Debe aprobar la solicitud VAC-001',
         },
       ],
     },
   })
   @IsOptional()
-  @ValidateNested()
-  @Type(() => EventPayloadDto)
-  payloadJson?: EventPayloadDto;
+  @IsObject()
+  payloadJson?: Record<string, unknown>;
 
   @ApiPropertyOptional({
     example: true,

@@ -25,13 +25,20 @@ export class AlertResponseSchema extends BaseAuditSchema {
   @ApiProperty({ example: 'Revisar con el equipo de tesorería' })
   message: string;
 
-  @ApiProperty({ example: 'OPEN', description: 'Estado: OPEN, IN_PROGRESS, CLOSED, etc.' })
+  @ApiProperty({
+    example: 'OPEN',
+    description: 'Estado: OPEN, IN_PROGRESS, CLOSED, etc.',
+  })
   status: string;
 
   @ApiProperty({ type: String, format: 'date-time', example: SWAGGER_DATE })
   alertDate: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date-time', example: SWAGGER_DATE })
+  @ApiPropertyOptional({
+    type: String,
+    format: 'date-time',
+    example: SWAGGER_DATE,
+  })
   attendedAt?: string;
 
   @ApiProperty({ type: Boolean, example: true })

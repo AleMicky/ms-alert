@@ -22,11 +22,4 @@ export class ClientSystemTypeormRepository
       where: { code },
     });
   }
-
-  findByIdWithTokens(id: string): Promise<ClientSystemEntity | null> {
-    return this.repository.findOne({
-      where: { id },
-      relations: { tokens: true },
-    });
-  }
 }

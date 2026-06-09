@@ -32,11 +32,6 @@ export abstract class BaseController<
     return this.service.update(id, dto as Partial<TResponse>);
   }
 
-  @Put(':id')
-  replace(@Param('id') id: ID, @Body() dto: TUpdateDto): Promise<TResponse> {
-    return this.service.update(id, dto as Partial<TResponse>);
-  }
-
   @Delete(':id')
   delete(@Param('id') id: ID): Promise<void> {
     return this.service.delete(id);

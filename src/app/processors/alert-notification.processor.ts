@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 
+import { getNotificationChannelKind } from 'src/app/utils/normalize-notification-channel.util';
 import { AlertNotificationService } from 'src/app/services/alert-notification.service';
 import { AlertOutcomeService } from 'src/app/services/alert-outcome.service';
 import { N8nClient } from 'src/infrastructure/integrations/n8n/n8n.client';
@@ -55,9 +56,14 @@ export class AlertNotificationProcessor extends WorkerHost {
         );
       }
 
+      const channelCode = notification.notificationChannel.code;
+      const channelKind = getNotificationChannelKind(channelCode);
+      const n8nChannel =
+        channelKind === 'GENERIC' ? channelCode : channelKind;
+
       const response = await this.n8nClient.sendNotification(webhookUrl, {
         notificationId: notification.id,
-        channel: notification.notificationChannel.code,
+        channel: n8nChannel,
         target: notification.target,
         title: notification.title,
         message: notification.message,

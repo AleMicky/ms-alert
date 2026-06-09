@@ -22,7 +22,10 @@ export function shadowInheritedMethod(
 
   let parent = Object.getPrototypeOf(prototype);
   while (parent && parent !== Object.prototype) {
-    const parentDescriptor = Object.getOwnPropertyDescriptor(parent, methodName);
+    const parentDescriptor = Object.getOwnPropertyDescriptor(
+      parent,
+      methodName,
+    );
     if (
       parentDescriptor?.value &&
       typeof parentDescriptor.value === 'function'

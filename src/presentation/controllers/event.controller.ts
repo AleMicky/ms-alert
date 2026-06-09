@@ -1,6 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
 import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -8,8 +16,11 @@ import {
 
 import { BaseController } from 'src/shared/core/base.controller';
 import { ApiCrudDoc } from 'src/config/swagger/crud';
+import { ClientSystem } from 'src/domain/entities/client-system';
 import { Event } from 'src/domain/entities/event';
 import { EventService } from 'src/app/services/event.service';
+import { CurrentClientSystem } from 'src/shared/decorators/current-client-system.decorator';
+import { ClientSystemAuthGuard } from 'src/shared/guards/client-system-auth.guard';
 import { CreateEventDto, UpdateEventDto } from '../dto/event';
 import { EventResponseSchema } from '../schemas';
 
@@ -30,9 +41,14 @@ export class EventController extends BaseController<
   }
 
   @Post()
+  @UseGuards(ClientSystemAuthGuard)
+  @ApiBearerAuth('client-system-token')
   @ApiBody({ type: CreateEventDto })
-  create(@Body() dto: CreateEventDto) {
-    return this.eventService.createFromDto(dto);
+  create(
+    @Body() dto: CreateEventDto,
+    @CurrentClientSystem() clientSystem?: ClientSystem,
+  ) {
+    return this.eventService.createFromDto(dto, clientSystem!);
   }
 
   @Get('code/:code')

@@ -6,7 +6,10 @@ export class SeverityLevelResponseSchema extends BaseAuditSchema {
   @ApiProperty({ format: 'uuid', example: SWAGGER_UUID })
   id: string;
 
-  @ApiProperty({ example: 'HIGH', description: 'Código del nivel de severidad' })
+  @ApiProperty({
+    example: 'HIGH',
+    description: 'Código del nivel de severidad',
+  })
   code: string;
 
   @ApiProperty({ example: 'Alta', description: 'Nombre legible' })
@@ -17,7 +20,11 @@ export class SeverityLevelResponseSchema extends BaseAuditSchema {
   })
   description?: string;
 
-  @ApiProperty({ type: Number, example: 3, description: 'Prioridad (mayor = más urgente)' })
+  @ApiProperty({
+    type: Number,
+    example: 3,
+    description: 'Prioridad (mayor = más urgente)',
+  })
   priority: number;
 
   @ApiPropertyOptional({

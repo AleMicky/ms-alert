@@ -6,5 +6,7 @@ export abstract class EventTypeRepository extends BaseRepository<EventType> {
     clientSystemId: string,
     code: string,
   ): Promise<EventType | null>;
-    abstract findActiveByClientSystem(clientSystemId: string): Promise<EventType[]>;
+  abstract findActiveByClientSystem(
+    clientSystemId: string,
+  ): Promise<EventType[]>;
 }

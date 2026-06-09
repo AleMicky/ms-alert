@@ -17,24 +17,46 @@ export class ClientSystemTokenTypeormRepository
     super(repository);
   }
 
-  findByToken(token: string) {
-    return this.repository.findOne({
-      where: { token },
+  async findByToken(
+    tokenHash: string,
+  ): Promise<ClientSystemTokenEntity | null> {
+    return await this.repository.findOne({
+      where: {
+        tokenHash,
+        active: true,
+      },
       relations: {
         clientSystem: true,
       },
     });
   }
 
-  findByClientSystemId(clientSystemId: string) {
-    return this.repository.find({
+  async findByClientSystemId(
+    clientSystemId: string,
+  ): Promise<ClientSystemTokenEntity[]> {
+    return await this.repository.find({
       where: {
-        clientSystem: { id: clientSystemId },
+        clientSystem: {
+          id: clientSystemId,
+        },
       },
       relations: {
         clientSystem: true,
       },
-      order: { createdAt: 'DESC' },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
+  async findActive(): Promise<ClientSystemTokenEntity[]> {
+    return await this.repository.find({
+      where: {
+        active: true,
+      },
+      relations: {
+        clientSystem: true,
+      },
     });
   }
 }

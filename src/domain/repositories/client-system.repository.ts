@@ -3,6 +3,4 @@ import { ClientSystem } from '../entities/client-system';
 
 export abstract class ClientSystemRepository extends BaseRepository<ClientSystem> {
   abstract findByCode(code: string): Promise<ClientSystem | null>;
-
-  abstract findByIdWithTokens(id: string): Promise<ClientSystem | null>;
 }

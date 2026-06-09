@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ClientSystemTokenEntity } from './client-system-token.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseAuditColumns } from 'src/shared/core/base-audit-columns';
 
 @Entity({ name: 'tclient_systems' })
@@ -15,15 +14,4 @@ export class ClientSystemEntity extends BaseAuditColumns {
 
   @Column({ nullable: true })
   description?: string;
-
-  @Column({
-    default: true,
-  })
-  active: boolean;
-
-  @OneToMany(
-    () => ClientSystemTokenEntity,
-    (clientSystemToken) => clientSystemToken.clientSystem,
-  )
-  tokens?: ClientSystemTokenEntity[];
 }

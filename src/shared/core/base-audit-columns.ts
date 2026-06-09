@@ -1,9 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseAuditColumns {
   @Column({
@@ -33,19 +28,4 @@ export abstract class BaseAuditColumns {
     type: 'timestamp',
   })
   updatedAt!: Date;
-
-  @Column({
-    name: 'deleted_by',
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
-  deletedBy!: string | null;
-
-  @DeleteDateColumn({
-    name: 'deleted_at',
-    type: 'timestamp',
-    nullable: true,
-  })
-  deletedAt!: Date | null;
 }

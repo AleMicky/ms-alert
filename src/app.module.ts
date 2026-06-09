@@ -18,4 +18,4 @@ import { BullModule } from '@nestjs/bullmq';
     MsAlertsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

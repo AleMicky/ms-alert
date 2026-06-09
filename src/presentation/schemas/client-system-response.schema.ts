@@ -10,7 +10,10 @@ export class ClientSystemResponseSchema extends BaseAuditSchema {
   @ApiProperty({ example: 'SIS_FIN', description: 'Código único del sistema' })
   code: string;
 
-  @ApiProperty({ example: 'Sistema Financiero', description: 'Nombre del sistema' })
+  @ApiProperty({
+    example: 'Sistema Financiero',
+    description: 'Nombre del sistema',
+  })
   name: string;
 
   @ApiPropertyOptional({
